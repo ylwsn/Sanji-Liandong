@@ -1,0 +1,69 @@
+
+<body>
+
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" enctype="multipart/form-data">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">地区：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+			 	<!-- 省/自治区 -->			 	
+				<select name="pro" id="pro">
+					<option>--请选择省份--</option>
+					{volist name="pro" id="vo"}
+					<option value="{$vo.region_id}">{$vo.region_name}</option>
+					{/volist}
+				</select>				
+				<!-- 市/州 -->
+				<select name="city" id="city">
+					<option>--请选择市/州--</option>
+					<option value=""></option>								
+				</select>
+				<!-- 区/县 -->
+				<select name="county" id="county" >
+					<option>--请选择区/县--</option>
+					<option value=""></option>
+				</select>
+			</div>
+		</div>
+	</form>
+</article>
+
+<script type="text/javascript">
+$('#pro').change(function(){
+	$prov=$('#pro').val();
+	$.ajax({
+		type:"post",
+		url:"{:url('hospital/getCity')}",
+		data:'pro='+$prov,
+		dataType:"json",
+		success:function(data){
+	        var html ='<option value="">--请选择市/州--</option>';
+	        for(var i in data){
+	            html += '<option value="'+data[i].region_id+'">'+data[i].region_name+'</option>';
+	        }
+	        $('#city').html(html);
+		}
+	});
+
+});
+
+$('#city').change(function(){
+	$city=$('#city').val();
+	$.ajax({
+		type:"post",
+		url:"{:url('hospital/getCounty')}",
+		data:'city='+$city,
+		dataType:"json",
+		success:function(data){
+	        var html ='<option value="">--请选择区/县--</option>';
+	        for(var i in data){
+	            html += '<option value="'+data[i].region_id+'">'+data[i].region_name+'</option>';
+	        }
+	        $('#county').html(html);
+		}
+	});
+});
+
+</script>
+
+</body>
